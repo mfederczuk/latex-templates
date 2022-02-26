@@ -1,0 +1,96 @@
+#!/bin/sh
+# -*- sh -*-
+# vim: set syntax=sh
+# code: language=shellscript
+
+set -o errexit
+set -o nounset
+
+argv0() {
+	if [ "$0" = "$(realpath -s -- "$0")" ]; then
+		printf '%s' "$(basename -- "$0")"
+	else
+		printf '%s' "$0"
+	fi
+}
+
+templates_locatin_dir_path="$(realpath --relative-base=. -- "$0")"
+templates_locatin_dir_path="$(dirname -- "$templates_locatin_dir_path")"
+readonly templates_locatin_dir_path
+
+# region args
+
+case $# in
+	(0)
+		echo "$(argv0): missing arguments: <source> <target>" >&2
+		exit 3
+		;;
+	(1)
+		echo "$(argv0): missing argument: <target>" >&2
+		exit 3
+		;;
+	(2) ;;
+	(*)
+		echo "$(argv0): too many arguments: $(($# - 2))" >&2
+		exit 4
+		;;
+esac
+
+source="$1"
+if [ -z "$source" ]; then
+	echo "$(argv0): argument 1: must not be empty" >&2
+	exit 9
+fi
+source="$(realpath -ms --relative-base=. -- "$source")"
+
+target="$2"
+if [ -z "$target" ]; then
+	echo "$(argv0): argument 2: must not be empty" >&2
+	exit 9
+fi
+target="$(realpath -ms --relative-base=. -- "$target")"
+
+if [ ! -e "$source" ]; then
+	fallback=''
+
+	if ! printf '%s' "$source" | grep -Eq '/'; then
+		tmp="$templates_locatin_dir_path/$source.tex"
+
+		if [ -f "$tmp" ]; then
+			fallback="$tmp"
+		fi
+
+		unset -v tmp
+	fi
+
+	if [ -z "$fallback" ]; then
+		echo "$(argv0): $1: no such file" >&2
+		exit 24
+	fi
+
+	source="$fallback"
+	unset -v fallback
+fi
+if [ ! -f "$source" ]; then
+	echo "$(argv0): $1: not a regular file" >&2
+	exit 26
+fi
+
+if [ -e "$target" ] && [ ! -f "$target" ]; then
+	echo "$(argv0): $2: not a regular file" >&2
+	exit 26
+fi
+
+readonly source target
+
+# endregion
+
+today="$(date +%s)"
+readonly today
+
+day="$(date -d"@$today" +%d)"
+month="$(date -d"@$today" +%m)"
+year="$(date -d"@$today" +%Y)"
+readonly day month year
+
+sed -E s/'<DAY>'/"$day"/g\;s/'<MONTH>'/"$month"/g\;s/'<YEAR>'/"$year"/g "$source" > "$target"
