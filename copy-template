@@ -20,21 +20,50 @@ readonly templates_locatin_dir_path
 
 # region args
 
+list_templates=false
+
 case $# in
 	(0)
-		echo "$(argv0): missing arguments: <source> <target>" >&2
+		echo "$(argv0): missing arguments: (--list | <source> <target>)" >&2
 		exit 3
 		;;
 	(1)
-		echo "$(argv0): missing argument: <target>" >&2
-		exit 3
+		case "$1" in
+			('--list')
+				list_templates=true
+				;;
+			(*)
+				echo "$(argv0): missing argument: <target>" >&2
+				exit 3
+				;;
+		esac
 		;;
-	(2) ;;
+	(2)
+		case "$1" in
+			('--list')
+				echo "$(argv0): too many arguments: $(($# - 1))" >&2
+				exit 4
+				;;
+			(*)
+				# nothing since correct usage
+				;;
+		esac
+		;;
 	(*)
-		echo "$(argv0): too many arguments: $(($# - 2))" >&2
+		case "$1" in
+			('--list') expected_argc=1 ;;
+			(*)        expected_argc=2 ;;
+		esac
+
+		echo "$(argv0): too many arguments: $(($# - expected_argc))" >&2
 		exit 4
 		;;
 esac
+
+if $list_templates; then
+	printf '%s\n' "$templates_locatin_dir_path/"*'.tex' | sed -E s%'(.*/)?([^/]+)\.tex$'%'\2'%
+	return
+fi
 
 source="$1"
 if [ -z "$source" ]; then
