@@ -14,9 +14,9 @@ argv0() {
 	fi
 }
 
-templates_locatin_dir_path="$(realpath --relative-base=. -- "$0")"
-templates_locatin_dir_path="$(dirname -- "$templates_locatin_dir_path")"
-readonly templates_locatin_dir_path
+templates_location_dir_path="$(realpath --relative-base=. -- "$0")"
+templates_location_dir_path="$(dirname -- "$templates_location_dir_path")"
+readonly templates_location_dir_path
 
 # region args
 
@@ -61,7 +61,7 @@ case $# in
 esac
 
 if $list_templates; then
-	printf '%s\n' "$templates_locatin_dir_path/"*'.tex' | sed -E s%'(.*/)?([^/]+)\.tex$'%'\2'%
+	printf '%s\n' "$templates_location_dir_path/"*'.tex' | sed -E s%'(.*/)?([^/]+)\.tex$'%'\2'%
 	return
 fi
 
@@ -83,7 +83,7 @@ if [ ! -e "$source" ]; then
 	fallback=''
 
 	if ! printf '%s' "$source" | grep -Eq '/'; then
-		tmp="$templates_locatin_dir_path/$source.tex"
+		tmp="$templates_location_dir_path/$source.tex"
 
 		if [ -f "$tmp" ]; then
 			fallback="$tmp"
