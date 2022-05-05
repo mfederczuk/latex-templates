@@ -62,7 +62,7 @@ esac
 
 if $list_templates; then
 	printf '%s\n' "$templates_location_dir_path/"*'.tex' | sed -E s%'(.*/)?([^/]+)\.tex$'%'\2'%
-	return
+	exit
 fi
 
 source="$1"
