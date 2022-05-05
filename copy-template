@@ -20,11 +20,21 @@ readonly templates_location_dir_path
 
 # region args
 
+print_usage() {
+	echo "usage: $(argv0) (--list | <source> <target>)" >&2
+}
+
+if [ "$1" = '--help' ]; then
+	print_usage
+	exit
+fi
+
 list_templates=false
 
 case $# in
 	(0)
 		echo "$(argv0): missing arguments: (--list | <source> <target>)" >&2
+		print_usage
 		exit 3
 		;;
 	(1)
@@ -34,6 +44,7 @@ case $# in
 				;;
 			(*)
 				echo "$(argv0): missing argument: <target>" >&2
+				print_usage
 				exit 3
 				;;
 		esac
@@ -42,6 +53,7 @@ case $# in
 		case "$1" in
 			('--list')
 				echo "$(argv0): too many arguments: $(($# - 1))" >&2
+				print_usage
 				exit 4
 				;;
 			(*)
@@ -56,6 +68,7 @@ case $# in
 		esac
 
 		echo "$(argv0): too many arguments: $(($# - expected_argc))" >&2
+		print_usage
 		exit 4
 		;;
 esac
