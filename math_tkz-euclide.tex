@@ -17,6 +17,7 @@
 	output-exponent-marker = \textnormal{\scriptsize{}E},
 }
 
+\newcommand{\paren}[1]{\mathopen{}\mathclose\bgroup\left(#1\aftergroup\egroup\right)} % <https://tex.stackexchange.com/a/2610>
 \newcommand{\result}[1]{\underline{\underline{#1}}}
 \newcommand{\alignedresult}[1]{\makebox[0pt][l]{$\result{\phantom{#1}}$}}
 \newcommand{\axislabel}[2]{$#1$ [$\mathrm{#2}$]}
