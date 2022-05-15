@@ -135,4 +135,4 @@ month="$(date -d"@$today" +%m)"
 year="$(date -d"@$today" +%Y)"
 readonly day month year
 
-sed -E s/'<DAY>'/"$day"/g\;s/'<MONTH>'/"$month"/g\;s/'<YEAR>'/"$year"/g "$source" > "$target"
+sed -E /'^[[:space:]]*%%'/d\;s/'[[:space:]]*%%.*$'//\;s/'<DAY>'/"$day"/g\;s/'<MONTH>'/"$month"/g\;s/'<YEAR>'/"$year"/g "$source" > "$target"
