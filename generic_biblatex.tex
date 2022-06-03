@@ -1,0 +1,30 @@
+\documentclass[12pt, a4paper]{article}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[austrian]{babel}
+\usepackage{datetime}
+\usepackage[babel, style=austrian]{csquotes}
+%% biblatex stuff
+\usepackage[colorlinks=true, linkcolor=black, citecolor=black, urlcolor=blue]{hyperref}
+\usepackage[backend=biber, style=verbose]{biblatex}
+\usepackage{relsize}
+
+\renewcommand{\familydefault}{\sfdefault} %% change document font to sans-serif
+\renewcommand{\mkbibacro}[1]{{\smaller\MakeUppercase{#1}}} %% this is needed because the sans-serif font does not have a
+                                                           %% small caps shape, so we emulate it by just making the size
+                                                           %% smaller <https://tex.stackexchange.com/a/203128>
+
+\addbibresource{TODO.bib}
+
+\title{TODO}
+\author{Michael Federczuk}
+\date{\formatdate{<DAY>}{<MONTH>}{<YEAR>}}
+
+\begin{document}
+\maketitle
+
+TODO
+
+%\printbibliography
+
+\end{document}
