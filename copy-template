@@ -17,6 +17,37 @@ argv0() {
 	fi
 }
 
+log() {
+	case $# in
+		(0)
+			echo 'log: missing argument: <message>' >&2
+			exit 123
+			;;
+		(1) ;;
+		(*)
+			echo "log: too many arguments: $(($# - 1))" >&2
+			exit 123
+			;;
+	esac
+
+	printf -- '%s\n' "$1" >&2
+}
+errlog() {
+	case $# in
+		(0)
+			echo 'error: missing argument: <message>' >&2
+			exit 123
+			;;
+		(1) ;;
+		(*)
+			echo "error: too many arguments: $(($# - 1))" >&2
+			exit 123
+			;;
+	esac
+
+	log "$(argv0): $1"
+}
+
 templates_location_dir_path="$(realpath --relative-base=. -- "$0")"
 templates_location_dir_path="$(dirname -- "$templates_location_dir_path")"
 readonly templates_location_dir_path
@@ -24,7 +55,7 @@ readonly templates_location_dir_path
 # region args
 
 print_usage() {
-	echo "usage: $(argv0) (--list | <source> <target>)" >&2
+	log "usage: $(argv0) (--list | <source> <target>)"
 }
 
 if [ "$1" = '--help' ]; then
@@ -36,7 +67,7 @@ list_templates=false
 
 case $# in
 	(0)
-		echo "$(argv0): missing arguments: (--list | <source> <target>)" >&2
+		errlog 'missing arguments: (--list | <source> <target>)'
 		print_usage
 		exit 3
 		;;
@@ -46,7 +77,7 @@ case $# in
 				list_templates=true
 				;;
 			(*)
-				echo "$(argv0): missing argument: <target>" >&2
+				errlog 'missing argument: <target>'
 				print_usage
 				exit 3
 				;;
@@ -55,7 +86,7 @@ case $# in
 	(2)
 		case "$1" in
 			('--list')
-				echo "$(argv0): too many arguments: $(($# - 1))" >&2
+				errlog "too many arguments: $(($# - 1))"
 				print_usage
 				exit 4
 				;;
@@ -70,7 +101,7 @@ case $# in
 			(*)        expected_argc=2 ;;
 		esac
 
-		echo "$(argv0): too many arguments: $(($# - expected_argc))" >&2
+		errlog "too many arguments: $(($# - expected_argc))"
 		print_usage
 		exit 4
 		;;
@@ -83,14 +114,14 @@ fi
 
 source="$1"
 if [ -z "$source" ]; then
-	echo "$(argv0): argument 1: must not be empty" >&2
+	errlog 'argument 1: must not be empty'
 	exit 9
 fi
 source="$(realpath -ms --relative-base=. -- "$source")"
 
 target="$2"
 if [ -z "$target" ]; then
-	echo "$(argv0): argument 2: must not be empty" >&2
+	errlog 'argument 2: must not be empty'
 	exit 9
 fi
 target="$(realpath -ms --relative-base=. -- "$target")"
@@ -109,7 +140,7 @@ if [ ! -e "$source" ]; then
 	fi
 
 	if [ -z "$fallback" ]; then
-		echo "$(argv0): $1: no such file" >&2
+		errlog "$1: no such file"
 		exit 24
 	fi
 
@@ -117,12 +148,12 @@ if [ ! -e "$source" ]; then
 	unset -v fallback
 fi
 if [ ! -f "$source" ]; then
-	echo "$(argv0): $1: not a regular file" >&2
+	errlog "$1: not a regular file"
 	exit 26
 fi
 
 if [ -e "$target" ] && [ ! -f "$target" ]; then
-	echo "$(argv0): $2: not a regular file" >&2
+	errlog "$2: not a regular file"
 	exit 26
 fi
 
