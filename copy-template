@@ -48,9 +48,21 @@ errlog() {
 	log "$(argv0): $1"
 }
 
-templates_location_dir_path="$(realpath --relative-base=. -- "$0")"
-templates_location_dir_path="$(dirname -- "$templates_location_dir_path")"
+root_dir_path="$(realpath --relative-to=. -- "$0")"
+root_dir_path="$(dirname -- "$root_dir_path")"
+readonly root_dir_path
+
+templates_location_dir_path="$(realpath --relative-base=. -ms -- "$root_dir_path/templates")"
 readonly templates_location_dir_path
+
+if [ ! -e "$templates_location_dir_path" ]; then
+	errlog "$templates_location_dir_path: no such directory"
+	exit 24
+fi
+if [ ! -d "$templates_location_dir_path" ]; then
+	errlog "$templates_location_dir_path: not a directory"
+	exit 26
+fi
 
 # region args
 
