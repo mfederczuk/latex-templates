@@ -58,7 +58,7 @@ print_usage() {
 	log "usage: $(argv0) (--list | <source> <target>)"
 }
 
-if [ "$1" = '--help' ]; then
+if [ "${1-}" = '--help' ]; then
 	print_usage
 	exit
 fi
