@@ -3,6 +3,8 @@
 \usepackage[margin=2.5cm]{geometry}
 \usepackage[T1]{fontenc}
 \usepackage[austrian]{babel}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
 \usepackage{parskip}
 \usepackage{datetime}
 %% math stuff:
@@ -11,6 +13,11 @@
 \usepackage{enumitem}
 
 \renewcommand{\familydefault}{\sfdefault} %% change document font to sans-serif
+
+\pagestyle{fancy}
+\renewcommand{\headrulewidth}{0pt} %% no vertical rule in the header
+\fancyhf{} %% clears header and footer
+\fancyfoot[C]{\arabic{page}/\pageref{LastPage}}
 
 \AtBeginDocument{\sisetup{math-rm=\mathrm, text-rm=\rmfamily}}
 \sisetup{
@@ -36,6 +43,9 @@
 
 \begin{document}
 \maketitle
+%% \maketitle changes the page style for just the page it's used in apparently, so we need to set it back to fancy to
+%% have our custom footer
+\thispagestyle{fancy}
 
 TODO
 
