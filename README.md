@@ -1,5 +1,5 @@
 <!--
-  Copyright (c) 2022 Michael Federczuk
+  Copyright (c) 2023 Michael Federczuk
   SPDX-License-Identifier: CC-BY-SA-4.0
 -->
 
@@ -7,15 +7,24 @@
 
 ## About ##
 
-This is a collection of my personal $\LaTeX$ templates that I mostly just use for school work.
+This is a small collection of personal $\LaTeX$ templates that I mostly just use for school work.
+
+The template files are located in the directory [`templates/`](templates).
 
 ## Usage ##
 
-The [`copy-template`](copy-template) script will copy one of the templates to a specified location.
+The [`copy-template`](copy-template) script takes in two arguments: the first one is the template source and
+the second is the target file.  
+If the source argument contains any forward slashes (`/`) it is interpreted as a path to the template file.  
+If the source argument does **not** contain any slashes, then the template is taken from
+the path `$XDG_DATA_HOME/latex-templates/templates/[SOURCE].tex`.
 
-The script supports template-only comments; any comment starting with two percent signs (`%%`) will be removed when
-copying.  
-When an entire line is just a template-only comment, the entire line will be removed.
+Any comments that start with **two** percent signs instead of just one (`%%`) are "template-only" comments and will be
+removed when the template is copied to its target.  
+If a line contains nothing but a template-only comment, then that entire line will be removed.
+
+The existing templates files from the directory [`templates/`](templates) have to be manually installed into
+the directory `$XDG_DATA_HOME/latex-templates/templates/` to use them.
 
 ## License ##
 
